@@ -4,6 +4,12 @@ import https from "https"
 import cors from "cors"
 const app = express()
 
+const PORT = process.env.PORT || 5000
+
+const IP = "10.50.6.110"
+const SPLUNK_PORT = "8089"
+const ServerUrl = IP + ":" + SPLUNK_PORT
+
 import request from 'request-libcurl';
 
 const USERNAME = "admin";
@@ -23,7 +29,7 @@ app.get("/data", async (req, res) => {
     try {
 
         request({
-            url: "https://10.50.6.110:8089/servicesNS/admin/search/search/jobs?output_mode=json&search=search%20index%3Dwindows&id=mysearch_123",
+            url: `https://${ServerUrl}/servicesNS/admin/search/search/jobs?output_mode=json&search=search%20index%3Dwindows&id=mysearch_123`,
             method: "POST",
             auth: USERNAME + ":" + PASSWORD,
             rejectUnauthorized: false
@@ -35,20 +41,6 @@ app.get("/data", async (req, res) => {
 
                 const url = data.entry[0].links.results
                 console.log(url);
-
-                // request({
-                //     url: url + "?output_mode=json",
-                //     method: 'GET',
-                //     auth: USERNAME + ":" + PASSWORD,
-                //     rejectUnauthorized: false
-                // }, (err, resp) => {
-                //     if (err) res.send({ error: err })
-                //     else {
-                //         const { statusCode, body, headers } = resp;
-                //         console.log(JSON.parse(body))
-                //     }
-                // })
-                // res.send(JSON.parse(body));
 
                 const finalData = await fetch("https://10.50.6.110:8089" + url + "?output_mode=json", {
                     headers: {
@@ -66,6 +58,6 @@ app.get("/data", async (req, res) => {
     }
 })
 
-app.listen(5000, () => {
+app.listen(PORT, () => {
     console.log("Server Started on port 5000")
 })

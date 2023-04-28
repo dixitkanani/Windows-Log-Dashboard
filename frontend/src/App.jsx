@@ -4,6 +4,8 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const serverUrl = "http://localhost:5000/data"
+
 const columns = [
   {
     title: "ComputerName",
@@ -73,7 +75,7 @@ function App() {
   useEffect(() => {
     async function getData() {
       try {
-        const res = await axios.get("http://10.50.3.159:5000/data");
+        const res = await axios.get(serverUrl);
 
         console.log(res);
 
